@@ -1,0 +1,7 @@
+node_modules/
+htmlcov/
+static/Editor.md/
+data.db
+hotmovie_data.db
+watchlist_data.db
+users_data.db

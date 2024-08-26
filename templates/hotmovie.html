@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Hot Movie</h3>
+<button class="btn" id="sortButton">Order by Rate</button>
+
+<ul class="movie-list" id="movieList">
+    {% for movie in movies %}
+    <li data-rate="{{ movie.rate }}">{{ movie.title }}
+        <span class="float-right">
+            <a class="douban" href="{{ movie.url }}" title="Find this movie on Douban">豆瓣 {{ movie.rate }}</a>
+            <a class="imdb" href="https://www.imdb.com/find?q={{ movie.title }}" target="_blank" title="Find this movie on IMDb">IMDb</a>
+        </span>
+    </li>
+    {% endfor %}
+</ul>
+<img alt="Tom" class="Tom" src="{{ url_for('static', filename='images/Tom.gif') }}">
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const defaultmovies = document.querySelectorAll('#movieList li')
+
+    document.getElementById('sortButton').addEventListener('click', function() {
+
+        var movieList = document.getElementById('movieList');
+        var movies = Array.from(movieList.getElementsByTagName('li'));
+
+        // 判断当前按钮文本，以确定排序方式
+        if (this.textContent === 'Order by Rate') {
+            // 按评分排序
+            movies.sort(function(a, b) {
+                const rateA = parseFloat(a.getAttribute('data-rate')) || 0; // 如果评分不存在，则设为0
+                const rateB = parseFloat(b.getAttribute('data-rate')) || 0; // 如果评分不存在，则设为0
+                return rateB - rateA;
+                {#return parseFloat(b.getAttribute('data-rate')) - parseFloat(a.getAttribute('data-rate')); // 当出现缺失分数的数据时，会出现问题#}
+            });
+            this.textContent = 'Default';
+        } else {
+            // 恢复原始顺序
+            movies = Array.from(defaultmovies);
+            this.textContent = 'Order by Rate';
+        }
+
+        // 重新构建排序后的列表
+        movieList.innerHTML = ''; // 清空列表
+        movies.forEach(movie => movieList.appendChild(movie));
+    });
+});
+</script>
+{% endblock %}
+

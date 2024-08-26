@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='Editor.md/css/editormd.preview.css') }}">
+{% endblock %}
+
+{% block content %}
+    <h3>{{ movie.title }}</h3>
+    <p><strong>Year:</strong> {{ movie.year }}</p>
+
+    <h4>电影笔记</h4>
+    <div id="test-editormd-view">
+            <textarea id="filmnote-view" name="filmnote-view" style="display:none;" title="Film Note" placeholder="Enter film note"></textarea>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='Editor.md/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='Editor.md/lib/marked.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='Editor.md/editormd.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            console.log('jQuery is working');
+        });
+    </script>
+    <script type="text/javascript">
+            var EditormdView;
+            $(function () {
+                var filmnoteContent = {{ movie.filmnote|tojson|safe }};
+                {#var filmnoteContent = '{{ movie.filmnote|escapejs }}';#}
+
+                EditormdView = editormd.markdownToHTML("test-editormd-view", {
+                        markdown : filmnoteContent ,
+                        htmlDecode      : "style,script,iframe",  // you can filter tags decode
+                        tocm            : true,
+                        emoji           : true,
+                        taskList        : true,
+                        tex             : true,  // 默认不解析
+                        flowChart       : true,  // 默认不解析
+                        sequenceDiagram : true,  // 默认不解析
+                });
+            });
+    </script>
+{% endblock %}

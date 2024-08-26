@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>Register</h3>
+
+{#    <button type="button" class="button-inside-input">Check</button>#}
+    <form method="POST">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" autocomplete="on" required >
+        <button class="btn" id="register" data-action="register" value="code"></button>
+        <button class="btn" id="reset_pw" data-action="reset_pw" value="reset password"></button>
+        <br>
+
+
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" >
+        <br>
+
+        <label for="codetmp">Code</label>
+        <input type="text" id="codetmp" name="codetmp" >
+        <br>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" >
+        <br>
+
+        <label for="password_repeat">Repeat Password</label>
+        <input type="password" id="password_repeat" name="password_repeat" >
+        <br>
+
+        <button class="btn" type="submit" name="submit" id="submit" value="Submit"></button>
+
+    </form>
+{% endblock %}
+
+{% block scripts %}
+{#<script src="{{ url_for('static', filename = 'js/register_js.js') }}"></script>#}
+
+    <script src="{{ url_for('static', filename = "js/jquery-3.7.1.min.js") }}" ></script>
+    <script src="{{ url_for('static', filename = "js/register.js") }}"></script>
+{#    <script src="{{ url_for('static', filename = "js/register.js") }}"></script>#}
+
+{% endblock %}

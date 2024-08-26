@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<p>{{ movies | length }} Titles</p>
+{% if current_user.is_authenticated %}
+    <form method="post">
+        <label for="name">名字</label>
+        <input type="text" name="title" autocomplete="off" required>
+        <label for="year">年份</label>
+        <input type="text" name="year" autocomplete="off" required>
+        <input class="btn" type="submit" name="submit" value="Add">
+    </form>
+{% endif %}
+<ul class="movie-list">
+    {% for movie in movies %}
+        {% if movie.private_flag == True %}
+            {% if movie.user_id == current_user.id %}
+                {% include 'movie_file.html' %}
+            {% endif %}
+        {% else %}
+            {% include 'movie_file.html' %}
+        {% endif %}
+    {% endfor %}
+</ul>
+    <img alt="Tom" class="Tom" src="{{ url_for('static', filename='images/Tom.gif') }}">
+{% endblock %}

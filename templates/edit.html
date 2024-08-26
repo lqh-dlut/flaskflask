@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{{ super() }}
+    <meta charset="utf-8" />
+{#    <link rel="stylesheet" href="{{ url_for('static', filename='Editor.md/css/style.css') }}" />#}
+    <link rel="stylesheet" href="{{ url_for('static', filename='Editor.md/css/editormd.css') }}">
+
+{% endblock %}
+
+{% block content %}
+    <h3>Edit item</h3>
+    <form method="post">
+        <label for="title">Name</label>
+        <input type="text" id="title" name="title" autocomplete="off" required value="{{ movie.title }}" title="Title" placeholder="Enter movie title">
+
+        <label for="year">Year</label>
+        <input type="text" id="year" name="year" autocomplete="off" required value="{{ movie.year }}" title="Year" placeholder="Enter release year">
+
+        <label for="filmnote">Film Note</label>
+        <div id="editor-container">
+            <textarea id="filmnote" name="filmnote" style="display:none;" title="Film Note" placeholder="Enter film note"></textarea>
+        </div>
+        <input type="checkbox" id="private_flag" name="private_flag">私人
+        <input class="btn" type="submit" name="submit" value="Update" title="Update">
+
+{#        <textarea id="editor" name="filmnote">{{ movie.filmnote }}</textarea>#}
+
+    </form>
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='Editor.md/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='Editor.md/editormd.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            console.log('jQuery is working');
+        });
+    </script>
+    <script type="text/javascript">
+            var testEditor;
+
+            $(function () {
+                // 初始化 Editor.md
+                Editor = editormd("editor-container", {
+                    width   : "100%",
+                    height  :  800,
+
+                    path    : "{{ url_for('static', filename='Editor.md/lib/') }}",  // 这里是 Editor.md 的静态资源文件路径
+                    syncScrolling : "single",
+                    toolbar : true,
+                    markdown : {{ movie.filmnote|tojson|safe }},
+                    placeholder : "请输入 Markdown 文本...",
+                });
+            });
+    </script>
+{##}
+{#    <script src="{{ url_for('static', filename='Editor.md/jquery.min.js') }}"></script>#}
+{#    <script src="{{ url_for('static', filename='Editor.md/editormd.min.js') }}"></script>#}
+{#    <script>#}
+{#        $(function () {#}
+{#            // 初始化 Editor.md#}
+{#            var editor = editormd("editor", {#}
+{#                width   : "90%",#}
+{#                height  : 640,#}
+{#                path    : "{{ url_for('static', filename='Editor.md/lib/') }}",  // 这里是 Editor.md 的静态资源文件路径#}
+{#                syncScrolling : "single",#}
+{#                toolbar : true,#}
+{#                markdown : "{{ movie.filmnote }}",#}
+{#                placeholder : "请输入 Markdown 文本...",#}
+{#            });#}
+{#        });#}
+{#    </script>#}
+{#    <script>#}
+{#    $(document).ready(function() {#}
+{#        console.log('jQuery is working');#}
+{#    });#}
+{#</script>#}
+{% endblock %}
+
+{#    <script src="{{ url_for('static', filename='js/simplemde.min.css') }}"></script>#}
+{#    <script>#}
+{#    document.addEventListener('DOMContentLoaded',function () {#}
+        {#var simplemde = new SimpleMDE({ element: document.getElementById("MyID") });#}
+{#    });#}
+{#    </script>#}

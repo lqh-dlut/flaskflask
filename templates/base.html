@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+{% for message in get_flashed_messages() %}
+<div class="alert">{{ message }}</div>
+{% endfor %}
+<head>
+    {% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% if current_user.is_authenticated %}
+            <title>{{ user.name }}'s Watchlist</title>
+        {% else %}
+            <title>Default Watchlist</title>
+        {% endif %}
+
+    <link rel="icon" href="{{ url_for('static', filename='images/jerry.jpeg') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" type="text/css">
+    {% endblock %}
+</head>
+<body>
+    <h2>
+        <img alt="JerryHead" class="jerryhead" src="{{ url_for('static', filename='images/angry.jpeg') }}">
+        {% if current_user.is_authenticated %}
+            {{ user.name }}'s Watchlist
+        {% else %}
+            Default Watchlist
+        {% endif %}
+    </h2>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('service.hotmovie') }}">HotMovies</a></li>
+            {% if current_user.is_authenticated %}
+
+                <div class="dropdown">
+                    <button class="dropbtn">Settings</button>
+                    <div class="dropdown-content">
+                        <li><a href={{ url_for('setting.settings') }}>Settings</a></li>
+                        <li><a href={{ url_for('setting.settings') }}>Settings</a></li>
+                    </div>
+                </div>
+
+                <li><a href={{ url_for('admin.logout') }}>Logout</a></li>
+            {% else %}
+                <li><a href={{ url_for('admin.login') }}>Login</a></li>
+                <li><a href={{ url_for('register.register') }}>Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% block content %}{% endblock %}
+    <footer>
+        <small>&copy; 2023 <a href="http://baidu.com">LoveYOU</a></small>
+    </footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
