@@ -1,4 +1,6 @@
 #content database information
+from celery.schedules import crontab
+
 HOSTNAME = 'localhost'
 PORT = 3306
 USERNAME = "root"
@@ -20,3 +22,10 @@ MAIL_DEFAULT_SENDER = ('刘启昊', '1367445047@qq.com')
 #celery
 CELERY_BROKER_URL='redis://localhost:6379/0',
 CELERY_RESULT_BACKEND='redis://localhost:6379/0'
+
+CELERY_BEAT_SCHEDULE = {
+    'update_hotmovie_everyhour':{
+        'task':'update_hotmovie',
+        'schedule': crontab(minute=0, hour='*/1'),
+    },
+}
