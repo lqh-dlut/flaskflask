@@ -6,3 +6,4 @@
 #### ~~redis 用hashmap存储数据~~
 #### ~~hotmovie当遇到没有评分时，排序会出问题~~
 #### ~~hotmovie功能还是不对，为什么redis数据没有变化，但前端发生了改变~~
+#### celery功能
