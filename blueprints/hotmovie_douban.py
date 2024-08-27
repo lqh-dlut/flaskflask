@@ -31,7 +31,7 @@ def get_hot_movies(use_cache=True):
             #在redis存入爬取的数据
             pipe.hset(cache_key, movie_title,  json.dumps(movie))
 
-        pipe.expire(cache_key, 10) # 10s后自动清除数据
+        pipe.expire(cache_key, 3600) # 1小时后自动清除数据
         pipe.execute()
 
     return hot_movies
