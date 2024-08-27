@@ -25,7 +25,7 @@ CELERY_RESULT_BACKEND='redis://localhost:6379/0'
 
 CELERY_BEAT_SCHEDULE = {
     'update_hotmovie_everyhour':{
-        'task':'update_hotmovie',
+        'task': 'update_hotmovie',
         'schedule': crontab(minute=0, hour='*/1'),
     },
 }

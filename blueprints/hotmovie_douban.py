@@ -8,31 +8,37 @@ import config
 
 bp = Blueprint('service', __name__)
 
+'''将数据存入Redis缓存'''
+def update_use_cache(hot_movies, cache_key):
+    print('cache loaded')
+    pipe = redis_client.pipeline()
+    for movie in hot_movies:
+        movie_title = movie['title']
+        # 在redis存入爬取的数据
+        pipe.hset(cache_key, movie_title, json.dumps(movie))
+
+    pipe.expire(cache_key, 3600)  # 1小时后自动清除数据
+    pipe.execute()
+
+'''Redis获取热门电影'''
 def get_hot_movies(use_cache=True):
     cache_key = 'hot_movies'
+
+    # 判断是否使用用户缓存
     if use_cache:
+
         print('use_cache')
         cache_data = redis_client.hgetall(cache_key)
+
+        # 具体的缓存内容
         if cache_data:
             print(cache_data)
             print(type(cache_data))  # dict
             # 如果缓存有数据直接返回数据
             return [json.loads(value.decode()) for value in cache_data.values()]
 
-
     hot_movies = fetch_hotmovie_from_douban()
-
-    if use_cache:
-        # 将数据存入redis缓存
-        print('cache loaded')
-        pipe = redis_client.pipeline()
-        for movie in hot_movies:
-            movie_title = movie['title']
-            #在redis存入爬取的数据
-            pipe.hset(cache_key, movie_title,  json.dumps(movie))
-
-        pipe.expire(cache_key, 3600) # 1小时后自动清除数据
-        pipe.execute()
+    update_use_cache(hot_movies, cache_key)
 
     return hot_movies
     # 使用数据库达成的
@@ -48,7 +54,13 @@ def get_hot_movies(use_cache=True):
     #             new_movie.url = hot_movie['url']
     # print(hot_movies)
 
-#爬豆瓣API获取hot_movie
+'''celery定期更新redis缓存中的数据'''
+def update_hot_movie():
+    hot_movies = fetch_hotmovie_from_douban()
+    cache_key = 'hot_movies'
+    update_use_cache(hot_movies, cache_key)
+
+'''爬豆瓣API获取hot_movie'''
 def fetch_hotmovie_from_douban():
     page_limit = 10
     page_start = 0
@@ -61,8 +73,6 @@ def fetch_hotmovie_from_douban():
     hot_movies += resp.json()['subjects']
 
     return hot_movies
-
-
 
 @bp.route('/hotmovie')
 def hotmovie():
